@@ -1,0 +1,72 @@
+version: '3.0'
+
+services:
+    mysql:
+      #restart: always
+      container_name: austen-mysql
+      image: mysql:5.7
+      volumes:
+        - ./austen/data/mysql-data:/var/lib/mysql
+        - ./austen/conf/mysql-conf:/etc/mysql/conf.d
+        - ./austen/logs/mysql-logs:/logs
+      networks:
+        austen-network:
+          aliases:
+            - austen-network-mysql
+      ports:
+        - "3306:3306"
+      environment:
+        TZ: Asia/Shanghai
+        MYSQL_ROOT_PASSWORD: 123456
+      command:
+        --character-set-server=utf8mb4
+        --collation-server=utf8mb4_general_ci
+        --explicit_defaults_for_timestamp=true
+        --lower_case_table_names=1
+        --max_allowed_packet=128M
+        --sql-mode="STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,ERROR_FOR_DIVISION_BY_ZERO"
+    redis:
+      container_name: austen-redis
+      image: redis:latest
+      depends_on:
+        - mysql
+      volumes:
+        - ./austen/data/redis-data:/data
+      networks:
+        austen-network:
+          aliases:
+            - austen-network-redis
+      ports:
+        - "6379:6379"
+      command: redis-server
+#      command: redis-server --requirepass 1qazXSW@ --notify-keyspace-events Ex
+#    nginx:
+#      container_name: austen-nginx
+#      image: nginx:latest
+#      volumes:
+#        - ./austen/data/ngnix-data:/usr/share/nginx/html:ro
+#        - ./austen/conf/nginx-conf:/etc/nginx/conf.d:ro
+#        - ./austen/logs/nginx-logs:/var/log/nginx
+#        - ./austen/cache/nginx-cache:/usr/share/nginx/cache
+#        - ../../austen-static:/usr/share/nginx/static:ro
+#      networks:
+#        austen-network:
+#          aliases:
+#            - austen-network-nginx
+#      ports:
+#        - 80:80
+#      command: nginx -g "daemon off;"
+
+networks:
+  austen-network:
+    driver: bridge  
+
+volumes:
+#  nginx-data:
+#  nginx-conf:
+#  nginx-logs:
+#  nginx-cache:
+  mysql-data:
+  mysql-conf:
+  mysql-logs:
+  redis-data:
