@@ -62,10 +62,10 @@ networks:
     driver: bridge  
 
 volumes:
-#  nginx-data:
-#  nginx-conf:
-#  nginx-logs:
-#  nginx-cache:
+  nginx-data:
+  nginx-conf:
+  nginx-logs:
+  nginx-cache:
   mysql-data:
   mysql-conf:
   mysql-logs:
