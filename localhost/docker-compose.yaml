@@ -5,6 +5,7 @@ services:
       #restart: always
       container_name: austen-mysql
       image: mysql:5.7
+      platform: linux/x86_64
       volumes:
         - ./austen/data/mysql-data:/var/lib/mysql
         - ./austen/conf/mysql-conf:/etc/mysql/conf.d
